@@ -1,44 +1,36 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
+	"github.com/AltynayK/praktikum/internal/handler"
+	"github.com/AltynayK/praktikum/internal/service"
 	"github.com/gorilla/mux"
 )
 
-type MyUrl struct {
-	LongUrl  string `json:"LongUrl,omitempty"`
-	ShortUrl int    `json:"ShortUrl,omitempty"`
-}
-
-var n1qlParams []interface{}
-
-func PostEndpoint(w http.ResponseWriter, req *http.Request) {
-	var url MyUrl
-	_ = json.NewDecoder(req.Body).Decode(&url)
-
-	n1qlParams = append(n1qlParams, url.LongUrl)
-
-	url.ShortUrl = len(n1qlParams) - 1
-	err := json.NewEncoder(w).Encode(url.ShortUrl)
-	if err != nil {
-		fmt.Fprintf(w, "%s", err.Error())
-	}
-
-}
-
-func RootEndpoint(w http.ResponseWriter, req *http.Request) {
-
-}
+const port = ":8080"
 
 func main() {
+	mux := initHandlers()
+	service.IdList = make(map[int]string)
+
+	srv := http.Server{
+		Addr:    port,
+		Handler: mux,
+	}
+
+	log.Printf("App listening port: %s", port)
+	log.Fatal(srv.ListenAndServe())
+}
+
+func initHandlers() *mux.Router {
+	// TODO: how handler 404 (if not found some url, example: /not_exist_url)
+	// TODO: handle "Not Allowed Method" example: DELETE method request to /
+
 	router := mux.NewRouter()
-	router.HandleFunc("/", PostEndpoint).Methods("POST")
-	router.HandleFunc("/{id}", RootEndpoint).Methods("GET")
+	router.HandleFunc("/", handler.Post).Methods("POST")
+	router.HandleFunc("/{id}", handler.Get).Methods("GET")
 
-	log.Fatal(http.ListenAndServe(":8080", router))
-
+	return router
 }
