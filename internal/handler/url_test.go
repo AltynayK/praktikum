@@ -5,7 +5,9 @@ import (
 	"testing"
 )
 
+
 func TestGet(t *testing.T) {
+
 	type args struct {
 		rw  http.ResponseWriter
 		req *http.Request
@@ -18,12 +20,17 @@ func TestGet(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+
 			Get(tt.args.rw, tt.args.req)
+
+			Post(tt.args.rw, tt.args.req)
+
 		})
 	}
 }
 
-func TestPost(t *testing.T) {
+func TestGet(t *testing.T) {
+
 	type args struct {
 		rw  http.ResponseWriter
 		req *http.Request
@@ -36,7 +43,8 @@ func TestPost(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			Post(tt.args.rw, tt.args.req)
+
+			Get(tt.args.rw, tt.args.req)
 		})
 	}
 }
