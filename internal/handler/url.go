@@ -25,7 +25,7 @@ func Post(rw http.ResponseWriter, req *http.Request) {
 			Msg: fmt.Sprintf("json decode err: %s", err),
 		}
 
-		rw.WriteHeader(400)
+		rw.WriteHeader(201)
 		json.NewEncoder(rw).Encode(errRes)
 
 		return
@@ -50,6 +50,7 @@ func Post(rw http.ResponseWriter, req *http.Request) {
 	// set "Created" status 201
 	rw.WriteHeader(201)
 	fmt.Fprint(rw, string(jsonRes))
+
 }
 
 func Get(rw http.ResponseWriter, req *http.Request) {
