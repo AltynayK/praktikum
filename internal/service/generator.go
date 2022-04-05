@@ -6,6 +6,9 @@ var (
 )
 
 func WriteURLByID(url string) int {
+	if IdList == nil {
+		IdList = make(map[int]string)
+	}
 	id++
 	IdList[id] = url
 
